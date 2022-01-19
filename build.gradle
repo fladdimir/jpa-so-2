@@ -1,0 +1,80 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id "net.ltgt.apt-eclipse" version '0.21'
+}
+
+group = 'org'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies { // TODO: version pinning
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.hibernate:hibernate-spatial'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	implementation 'com.blazebit:blaze-persistence-core-api:1.6.4'
+	implementation 'com.blazebit:blaze-persistence-core-impl:1.6.4'
+	implementation 'com.blazebit:blaze-persistence-integration-hibernate-5.4:1.6.4'
+	implementation 'com.blazebit:blaze-persistence-integration-querydsl-expressions:1.6.4'
+	implementation 'com.blazebit:blaze-persistence-entity-view-api:1.6.4'
+	implementation 'com.blazebit:blaze-persistence-entity-view-impl:1.6.4'
+	implementation 'com.blazebit:blaze-persistence-jpa-criteria-api:1.6.4'
+	implementation 'com.blazebit:blaze-persistence-jpa-criteria-impl:1.6.4'
+	implementation 'com.blazebit:blaze-persistence-integration-entity-view-spring:1.6.4'
+	implementation 'com.blazebit:blaze-persistence-integration-spring-data-2.4:1.6.4'
+	annotationProcessor 'com.blazebit:blaze-persistence-entity-view-processor:1.6.4'
+
+	implementation 'com.vladmihalcea:hibernate-types-55:2.14.0'
+
+	compileOnly 'javax.annotation:javax.annotation-api'
+	annotationProcessor 'javax.annotation:javax.annotation-api'
+	implementation 'com.querydsl:querydsl-jpa'
+	annotationProcessor 'com.querydsl:querydsl-apt::jpa'
+
+	runtimeOnly 'org.postgresql:postgresql'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	runtimeOnly 'mysql:mysql-connector-java'
+
+	compileOnly 'org.projectlombok:lombok'
+	testCompileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.assertj:assertj-core:3.11.1'
+
+}
+
+test {
+	useJUnitPlatform()
+}
+
+// eclipse {
+//     classpath {
+//         file.beforeMerged { cp ->
+//             cp.entries.add( new org.gradle.plugins.ide.eclipse.model.SourceFolder('build/generated/sources/annotationProcessor/java/main', null) )
+//         }
+//     }
+// }
+
+/*
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', 'build/generated/source/apt/main']
+        }
+    }
+}
+*/
