@@ -3,6 +3,7 @@ package org.demo.projection;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -49,7 +50,7 @@ class ProjectionTest {
     }
 
     @Test
-    void test() {
+    void testView() {
         var result = parentViewRepository.findAll();
         assertThat(result).hasSize(3).allMatch(r -> r.getThe3MostCountedChildren().size() == 3);
         assertThat(result.stream().map(ProjectionEntityView::getCounterSum)).containsExactlyInAnyOrder(15L, 30L, 45L);
@@ -60,7 +61,7 @@ class ProjectionTest {
     }
 
     @Test
-    void testPaged() {
+    void testViewPaged() {
         Pageable pageable = PageRequest.of(1, 2, Sort.by(Order.desc("counterSum"), Order.asc("id")));
         var resultPaged = parentViewRepository.findAll(pageable);
         assertThat(resultPaged.size()).isEqualTo(1);
@@ -68,6 +69,16 @@ class ProjectionTest {
         assertThat(result3.getCounterSum()).isEqualTo(15);
         assertThat(result3.getThe3MostCountedChildren().stream().map(ProjectionChildEntityView::getCounter))
                 .containsExactly(5, 4, 3);
+    }
+
+    @Test
+    void testJoinFetch() {
+        var result = parentRepository.fetchAllWithChildrenWhenCounterGt3();
+        assertThat(result).hasSize(3);
+        assertThat(result.stream()
+                .map(r -> r.getChildren().stream().map(c -> c.getCounter()).collect(Collectors.toSet())))
+                        .containsExactlyInAnyOrderElementsOf(
+                                List.of(Set.of(5), Set.of(6, 8, 10), Set.of(6, 9, 12, 15)));
     }
 
 }
